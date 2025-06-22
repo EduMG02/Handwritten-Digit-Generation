@@ -40,6 +40,18 @@ if st.button("Generate"):
     z_dim, label_dim, img_dim = 100, 10, 784
     G = Generator(z_dim, label_dim, img_dim)
     
+    st.write("Model architecture:", G)
+    st.write("Loading weights from mnist_generator.pth...")
+
+    try:
+        G.load_state_dict(state_dict)
+        st.success("Modelo cargado correctamente.")
+    except RuntimeError as e:
+        st.error("Error cargando el modelo:")
+        st.code(str(e))
+        st.stop()
+
+
     state_dict = torch.load("mnist_generator.pth", map_location="cpu")
     G.load_state_dict(state_dict)
 
