@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # --- Definición del modelo Generator ---
 class Generator(nn.Module):
-    def __init__(self, z_dim, label_dim, img_dim):
+    def __init__(self, z_dim=64, label_dim=10, img_dim=784):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(z_dim + label_dim, 256),
@@ -37,21 +37,12 @@ st.title("MNIST Digit Generator")
 digit = st.selectbox("Select a digit (0–9):", list(range(10)))
 
 if st.button("Generate"):
-    # Cargar modelo y parámetros desde el archivo
-    checkpoint = torch.load("mnist_generator.pth", map_location="cpu")
+    z_dim, label_dim, img_dim = 64, 10, 784
+    G = Generator(z_dim, label_dim, img_dim)
     
-    # Leer hiperparámetros del checkpoint o usar fijos si el .pth es solo state_dict
-    if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
-        z_dim = checkpoint.get("z_dim", 64)
-        label_dim = checkpoint.get("label_dim", 10)
-        img_dim = checkpoint.get("img_dim", 784)
-        G = Generator(z_dim, label_dim, img_dim)
-        G.load_state_dict(checkpoint["state_dict"])
-    else:
-        # Si es solo el state_dict plano
-        z_dim, label_dim, img_dim = 64, 10, 784
-        G = Generator(z_dim, label_dim, img_dim)
-        G.load_state_dict(checkpoint)
+    # Aquí se asume que el archivo contiene SOLO el state_dict
+    state_dict = torch.load("mnist_generator.pth", map_location="cpu")
+    G.load_state_dict(state_dict)
 
     images = generate_images(G, digit, num=5, z_dim=z_dim)
 
