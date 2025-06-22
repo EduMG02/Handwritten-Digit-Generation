@@ -40,6 +40,8 @@ if st.button("Generate"):
     z_dim, label_dim, img_dim = 100, 10, 784
     G = Generator(z_dim, label_dim, img_dim)
     
+    state_dict = torch.load("mnist_generator.pth", map_location="cpu")
+    
     st.write("Model architecture:", G)
     st.write("Loading weights from mnist_generator.pth...")
 
@@ -52,7 +54,7 @@ if st.button("Generate"):
         st.stop()
 
 
-    state_dict = torch.load("mnist_generator.pth", map_location="cpu")
+    
     G.load_state_dict(state_dict)
 
     images = generate_images(G, digit, num=5, z_dim=z_dim)
