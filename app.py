@@ -5,12 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Generator(nn.Module):
-    def __init__(self, z_dim=64, label_dim=10, img_dim=784):
+    def __init__(self, z_dim, label_dim, img_dim):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(z_dim + label_dim, 128),
+            nn.Linear(z_dim + label_dim, 256),
             nn.ReLU(),
-            nn.Linear(128, img_dim),
+            nn.Linear(256,512),
+            nn.ReLU(),
+            nn.Linear(512, img_dim),
             nn.Tanh()
         )
 
