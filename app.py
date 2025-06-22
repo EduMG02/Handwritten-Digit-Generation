@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # --- Definición del modelo Generator ---
 class Generator(nn.Module):
-    def __init__(self, z_dim=64, label_dim=10, img_dim=784):
+    def __init__(self, z_dim=100, label_dim=10, img_dim=784):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(z_dim + label_dim, 256),
