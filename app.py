@@ -37,10 +37,9 @@ st.title("MNIST Digit Generator")
 digit = st.selectbox("Select a digit (0–9):", list(range(10)))
 
 if st.button("Generate"):
-    z_dim, label_dim, img_dim = 64, 10, 784
+    z_dim, label_dim, img_dim = 100, 10, 784
     G = Generator(z_dim, label_dim, img_dim)
     
-    # Aquí se asume que el archivo contiene SOLO el state_dict
     state_dict = torch.load("mnist_generator.pth", map_location="cpu")
     G.load_state_dict(state_dict)
 
@@ -52,7 +51,7 @@ if st.button("Generate"):
         axs[i].axis('off')
     st.pyplot(fig)
 
-# --- Contacto / footer ---
+# --- Contact / footer ---
 st.markdown("---")
 st.markdown("Created by: Jorge Eduardo Muñoz Garza · METI Internship Examination · 2025")
 
