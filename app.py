@@ -42,3 +42,17 @@ if st.button("Generate"):
         axs[i].imshow(images[i], cmap='gray')
         axs[i].axis('off')
     st.pyplot(fig)
+
+
+
+st.markdown("---")
+st.markdown("Created by: Jorge Eduardo Muñoz Garza · METI Internship Examination · 2025")
+
+
+st.markdown("""
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jorge-eduardo-munoz-garza-061724304/)
+[![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/EduMG02)
+[![Email](https://img.shields.io/badge/-Email-D14836?style=flat&logo=gmail&logoColor=white)](mailto:edu.garza02@gmail.com)
+[![Instagram](https://img.shields.io/badge/-Instagram-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/jmunozgarza)
+[![Portafolio](https://img.shields.io/badge/-Portafolio-4CAF50?style=flat&logo=vercel&logoColor=white)](https://eduardogarza-portfolio.vercel.app/)
+""")
