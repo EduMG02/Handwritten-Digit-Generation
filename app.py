@@ -35,7 +35,7 @@ def generate_images(model, digit, num=5):
 st.title("MNIST Digit Generator")
 digit = st.selectbox("Select a digit (0–9):", list(range(10)))
 if st.button("Generate"):
-    G = Generator()
+    G = Generator(z_dim=64, label_dim=10, img_dim=784)
     G.load_state_dict(torch.load("mnist_generator.pth", map_location=torch.device("cpu")))
     images = generate_images(G, digit)
 
