@@ -4,13 +4,14 @@ import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 
+# --- Definición del modelo Generator ---
 class Generator(nn.Module):
     def __init__(self, z_dim, label_dim, img_dim):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(z_dim + label_dim, 256),
             nn.ReLU(),
-            nn.Linear(256,512),
+            nn.Linear(256, 512),
             nn.ReLU(),
             nn.Linear(512, img_dim),
             nn.Tanh()
@@ -20,9 +21,9 @@ class Generator(nn.Module):
         x = torch.cat([noise, labels], dim=1)
         return self.model(x)
 
-def generate_images(model, digit, num=5):
+# --- Función para generar imágenes ---
+def generate_images(model, digit, num=5, z_dim=64):
     model.eval()
-    z_dim = 64
     noise = torch.randn(num, z_dim)
     labels = torch.full((num,), digit, dtype=torch.long)
     one_hot = torch.nn.functional.one_hot(labels, num_classes=10).float()
@@ -31,13 +32,28 @@ def generate_images(model, digit, num=5):
     images = images.view(-1, 28, 28).cpu().numpy()
     return images
 
-# UI
+# --- Interfaz Streamlit ---
 st.title("MNIST Digit Generator")
 digit = st.selectbox("Select a digit (0–9):", list(range(10)))
+
 if st.button("Generate"):
-    G = Generator(z_dim=64, label_dim=10, img_dim=784)
-    G.load_state_dict(torch.load("mnist_generator.pth", map_location=torch.device("cpu")))
-    images = generate_images(G, digit)
+    # Cargar modelo y parámetros desde el archivo
+    checkpoint = torch.load("mnist_generator.pth", map_location="cpu")
+    
+    # Leer hiperparámetros del checkpoint o usar fijos si el .pth es solo state_dict
+    if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
+        z_dim = checkpoint.get("z_dim", 64)
+        label_dim = checkpoint.get("label_dim", 10)
+        img_dim = checkpoint.get("img_dim", 784)
+        G = Generator(z_dim, label_dim, img_dim)
+        G.load_state_dict(checkpoint["state_dict"])
+    else:
+        # Si es solo el state_dict plano
+        z_dim, label_dim, img_dim = 64, 10, 784
+        G = Generator(z_dim, label_dim, img_dim)
+        G.load_state_dict(checkpoint)
+
+    images = generate_images(G, digit, num=5, z_dim=z_dim)
 
     fig, axs = plt.subplots(1, 5, figsize=(10, 2))
     for i in range(5):
@@ -45,11 +61,9 @@ if st.button("Generate"):
         axs[i].axis('off')
     st.pyplot(fig)
 
-
-
+# --- Contacto / footer ---
 st.markdown("---")
 st.markdown("Created by: Jorge Eduardo Muñoz Garza · METI Internship Examination · 2025")
-
 
 st.markdown("""
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jorge-eduardo-munoz-garza-061724304/)
